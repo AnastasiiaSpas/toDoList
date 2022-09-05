@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ItemService } from './item.service';
-import { Item } from './models/item'
+import { Item } from './models/item';
+import { Store, Select } from '@ngxs/store';
+import { AddItem, FilterItems } from './store/item.actions';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators'
+import { ItemSelectors } from './store/item.selectors';
 
 @Component({
   selector: 'app-root',
@@ -8,27 +12,36 @@ import { Item } from './models/item'
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent implements OnInit{
+
+  @Select(ItemSelectors.toDoItems) toDoItems$!: Observable<Item[]>;
+
   title = 'toDoList';
   newToDo = '';
-  allItems: Array<any> = [];
 
-  filter: 'all' | 'active' | 'done' = 'all';
+  // filter: 'all' | 'active' | 'done' = 'all';
 
-  constructor(private itemService: ItemService){}
+  constructor(private store: Store){  }
 
-  ngOnInit() {
-    this.allItems = this.itemService.allItems;
+  ngOnInit() { }
+
+  filterItem(filter: string){
+    this.store
+      .dispatch( new FilterItems(filter))
+      .subscribe( )
   }
-
-  get items() {
-    if (this.filter === 'all') {
-      return this.allItems;
-    }
-    return this.allItems.filter((item) => this.filter === 'done' ? item.done : !item.done);
-  }
+  // get items() {
+  //   if (this.filter === 'all') {
+  //     return this.store.subscribe(data=> console.log(data));
+  //   }
+  //   return this.store.subscribe(data=> {
+  //     this.filter === 'done'? data.done : !data.done
+  //   }
+  //   );
+  // }
 
   addItem(description: string){
-    this.itemService.addItem(description);
-    this.newToDo = '';
+    this.store
+      .dispatch(new AddItem(description))
+      .subscribe(() => this.newToDo = '')
   }
 }

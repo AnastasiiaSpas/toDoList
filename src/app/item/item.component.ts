@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ItemService } from '../item.service';
+import { Component, Input, OnInit } from '@angular/core';
 import { Item } from '../models/item';
+import { Store } from '@ngxs/store';
+import { EditItem, RemoveItem } from '../store/item.actions';
 
 @Component({
   selector: 'app-item',
@@ -12,19 +13,17 @@ export class ItemComponent implements OnInit {
 
   @Input() item!: Item;
 
-  constructor(private itemService: ItemService) { }
+  constructor(private store: Store) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   remove(item: Item){
-   this.itemService.remove(item)
+    this.store.dispatch(new RemoveItem(item))
   }
 
   saveItem(description: string){
-    if(!description) return;
     this.editable = false;
-    this.item.description = description;
+    this.store.dispatch(new EditItem(description, this.item))
   }
 
 }

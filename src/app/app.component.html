@@ -14,26 +14,27 @@
       <button class="btn btn-primary" (click)="addItem(newToDo)">Add</button>
       <h4>Filter your's tasks</h4>
       <div class="btn-wrapper">
-        <button class="btn" (click)="filter = 'all'">All</button>
-        <button class="btn" (click)="filter = 'active'">Active</button>
-        <button class="btn" (click)="filter = 'done'">Done</button>
+        <button class="btn" (click)="filterItem('all')">All</button>
+        <button class="btn" (click)="filterItem('active')">Active</button>
+        <button class="btn" (click)="filterItem('done')">Done</button>
       </div>
     </div>
 
     <div class="right-side">
 
 
-      <h2>{{items.length}} <span *ngIf="items.length === 1; else elseBlock">task</span>
+      <h2>{{ (toDoItems$ | async)?.length }} <span *ngIf="(toDoItems$ | async)?.length === 1; else elseBlock">task</span>
       <ng-template #elseBlock>tasks</ng-template></h2>
-
       <ul>
-        <li *ngFor="let item of items">
+        <li *ngFor="let item of toDoItems$ | async">
           <app-item [item]="item"></app-item>
         </li>
       </ul>
     </div>
   </div>
 </div>
+
+{{toDoItems$ | async | json}}
 
 
 

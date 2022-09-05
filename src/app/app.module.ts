@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgxsModule } from '@ngxs/store';
 
 import { AppComponent } from './app.component';
-import { ItemService } from './item.service';
 import { ItemComponent } from './item/item.component';
+import { ItemState } from './store/item.state';
 
 
 @NgModule({
@@ -14,9 +15,10 @@ import { ItemComponent } from './item/item.component';
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    NgxsModule.forRoot([ItemState])
   ],
-  providers: [ItemService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
